@@ -19,7 +19,6 @@ public class Client {
 
         System.out.println(list1);
 
-
         System.out.println("LinkedList : ");
         List<Integer> list2 = new LinkedList<>();
 
@@ -53,6 +52,9 @@ public class Client {
         System.out.println("size() : " + stk.size());
 
         Deque<Integer> deque = new ArrayDeque<>();
+
+        Map<Integer, String> map1 = new HashMap<>();
+        Map<Integer, String> map2 = new Hashtable<>();
 
     }
 }
