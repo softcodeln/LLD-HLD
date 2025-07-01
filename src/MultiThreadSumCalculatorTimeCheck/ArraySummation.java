@@ -1,9 +1,10 @@
-package MultiThreadedSumCalculator;
+package MultiThreadSumCalculatorTimeCheck;
 
+import java.time.LocalTime;
 import java.util.List;
 import java.util.concurrent.Callable;
 
-public class ArraySummation implements Callable<Long> {
+public class ArraySummation implements Callable<Integer> {
     List<Integer> arr;
     Integer start;
     Integer end;
@@ -14,13 +15,15 @@ public class ArraySummation implements Callable<Long> {
         this.end = end;
     }
 
-    @Override
-    public Long call() {
+    public Integer call() {
         Long sum = 0L;
+        LocalTime startTime = LocalTime.now();
         for (int i = start; i < end; i++) {
             sum += arr.get(i);
         }
-        return sum;
+        LocalTime endTime = LocalTime.now();
+
+        return endTime.getNano() - startTime.getNano();
     }
 
 }
