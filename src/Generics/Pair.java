@@ -8,6 +8,19 @@ public class Pair<V, T> {
         System.out.println("Default constructor..");
     }
 
+    public Pair(V first, T second) {
+        this.first = first;
+        this.second = second;
+    }
+
+    public void setFirst(V first) {
+        this.first = first;
+    }
+
+    public V getFirst() {
+        return first;
+    }
+
     public static <U> void doSomething(U num) {
         System.out.println("Doing something printing : " + num);
     }
