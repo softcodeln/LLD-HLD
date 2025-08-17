@@ -1,5 +1,8 @@
 package TicTacToe.models;
 
+import TicTacToe.strategies.BotPlayingStrategies.BotPlayingFactory;
+import TicTacToe.strategies.BotPlayingStrategies.BotPlayingStrategy;
+
 public class BotPlayer extends Player{
     private BotDifficultyLevel level;
     public BotPlayer(String name, PlayerType playerType, Character symbol, BotDifficultyLevel level) {
@@ -9,7 +12,10 @@ public class BotPlayer extends Player{
 
     @Override
     Move makeMove(Board board) {
-        System.out.println("Botty is not playing in the game yet!");
-        return null;
+//        System.out.println("Botty is not playing in the game yet!");
+        // this-> player
+        System.out.println("It's " + this.getName() + "'s move:");
+        BotPlayingStrategy botPlayingStrategy = BotPlayingFactory.getStrategy(level);
+        return botPlayingStrategy.makeMove(board, this);
     }
 }

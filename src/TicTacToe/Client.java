@@ -5,8 +5,10 @@ import TicTacToe.models.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public class Client {
+    static Scanner scanner = new Scanner(System.in);
     public static void main(String[] args) {
         GameController gameController = new GameController();
 
@@ -24,10 +26,16 @@ public class Client {
         Game game1 = gameController.startGame(3, players, winningStrategyTypes);
 //        Game game2 = null;//gameController.startGame();
 
-//        gameController.displayBoard(game1);
         while(gameController.checkGameStatus(game1).equals(GameState.IN_PROGRESS)) {
             gameController.displayBoard(game1);
             gameController.makeMove(game1);
+            gameController.displayBoard(game1);
+
+            System.out.println("Do you want to undo your move? [Y/N]");
+            String input = scanner.nextLine();
+            if (input.equals("Y")) {
+                gameController.undo(game1);
+            }
         }
 
         if (gameController.checkGameStatus(game1).equals(GameState.DRAW)) {
@@ -39,8 +47,15 @@ public class Client {
 }
 
 /*
-Homework:
+Homework 1 :
 Add all validations and exceptions classes required.
 Convert the unique symbol validation code to one line using streams.
 Add Bot's make move functon - For EASY and MEDIUM
+
+Homework 2 :
+Finish Winning Strategies
+
+Larger Homework :
+Convert this into REST API Once you learn How in PROJECT.
+Build Tournament and LeaderBoard
 */

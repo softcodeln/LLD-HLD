@@ -1,5 +1,9 @@
 package TicTacToe.models;
 
+import TicTacToe.strategies.WinningStrategies.WinningStrategy;
+import TicTacToe.strategies.WinningStrategies.WinningStrategyFactory;
+import TicTacToe.validations.gamevalidations.BotCountValidation;
+import TicTacToe.validations.gamevalidations.PlayerCountValidation;
 import TicTacToe.validations.gamevalidations.UniqueSymbolValidation;
 
 import java.util.ArrayList;
@@ -13,11 +17,16 @@ public class Game {
     private int nextPlayerIndex;
     private List<Move> movesHistory;
     private List<WinningStrategyType> winningStrategyTypes;
+    private List<WinningStrategy> winningStrategies;
 
     public Game(Builder builder) {
         this.board = new Board(builder.size);
         this.players = builder.players;
         this.winningStrategyTypes = builder.winningStrategyTypes;
+        this.winningStrategies = new ArrayList<>();
+        winningStrategyTypes.forEach(type -> {
+            winningStrategies.add(WinningStrategyFactory.getStrategy(type));
+        });
         nextPlayerIndex = 0;
         gameState = GameState.IN_PROGRESS;
         movesHistory = new ArrayList<>();
@@ -79,6 +88,38 @@ public class Game {
         this.winningStrategyTypes = winningStrategies;
     }
 
+    public void undo() {
+        // We need to revert all the steps done to make a move.
+        if (movesHistory.size() == 0) {
+            throw new RuntimeException("No moves to undo");
+        }
+        // 1. Rollback the nextPlayerIndex
+        //(A-B)%N -> (A-B+N)%N
+        nextPlayerIndex = (nextPlayerIndex - 1 + players.size())%players.size();
+        // 2. Get move from history
+        Move move = movesHistory.removeLast();
+        // 3. revert the move from the board - update the cells
+        board.getGrid().get(move.getCell().getRow()).get(move.getCell().getCol()).setCellState(CellState.EMTPY);
+        board.getGrid().get(move.getCell().getRow()).get(move.getCell().getCol()).setSymbol(null);
+        // 4. Revert the strategy count map
+        for (WinningStrategy strategy : winningStrategies) {
+            strategy.handleUndo(move);
+        }
+        // 5. Set the winner to null
+        setWinner(null);
+        // 6. Set the gameState to IN_PROGRESS
+        setGameState(GameState.IN_PROGRESS);
+    }
+
+    public boolean checkWinner(Move move) {
+        for (WinningStrategy strategy : winningStrategies) {
+            if (strategy.checkWinner(board, move)){
+                return true;
+            }
+        }
+        return false;
+    }
+
     public void makeMove() {
         // Fetch player to make the move
         Player currentPlayer = players.get(nextPlayerIndex);
@@ -89,7 +130,15 @@ public class Game {
         board.getGrid().get(move.getCell().getRow()).get(move.getCell().getCol()).setCellState(CellState.FILLED);
         board.getGrid().get(move.getCell().getRow()).get(move.getCell().getCol()).setSymbol(currentPlayer.getSymbol());
         // Store the move in movesHistory
+        movesHistory.add(move);
         // check winner and update game state
+        if (checkWinner(move)) {
+            setWinner(currentPlayer);
+            setGameState(GameState.SUCCESS);
+        } else if (movesHistory.size() == board.getSize() * board.getSize()) {
+            setWinner(null);
+            setGameState(GameState.DRAW);
+        }
     }
 
     public static Builder getBuilder() {
@@ -118,6 +167,8 @@ public class Game {
 
         void validations() {
             UniqueSymbolValidation.validate(players);
+            PlayerCountValidation.validate(players);
+            BotCountValidation.validate(players);
         }
 
         public Game build() {
