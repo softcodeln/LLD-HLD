@@ -14,7 +14,7 @@ Step-2: Requirement Gathering
 2. Subscriber can read message.
 3. Subscriber and Publisher have indirectly many-to-many relation.
 4. Publisher and Subscriber will be loosly coupled.
-5. Subscriber can register and deregister themself to Publisher.
+5. Subscriber can subscribe/unsubscribe to a Topic through the Broker; publishers stay unaware of subscribers.
 6. Message read by Subscriber is near real-time.
 
 Step-3: Clarify Requirements
@@ -80,33 +80,53 @@ Subscriber is the Observer
 
 
 
-
-
 Step-5: Schema Design + Attributes (PK + FK + attrib) + Cardinalities
 
 ****Cardinalities****
-Topic - Broker = M:1
-Publisher - Broker = M:1
-Subscriber - Broker = M:1
-Message - Topic = M:1
-Topic - Subscriber = M:M
-Topic - Publisher = M:M
-Subscription - Subscriber = M:1
-Subscription - Topic = M:1
+topic - broker = M:1
+publisher - broker = M:1
+subscriber - broker = M:1
+message - topic = M:1
+topic - subscriber = M:M
+topic - publisher = M:M
+topic_subscription - subscriber = M:1
+topic_subscription - topic = M:1
 
 ****Schema Desgin + Attributes (PK + FK + attrib) ****
 
-Topic(id String [Primary key], String name, latestOffset long, broker_id String [Foreign Key])
+topic(	id String PK,
+		String name,
+		latestOffset long,
+		broker_id String FK -> broker(id)
+	)
 
-Broker(id String PK, String name)
+broker(	id String PK,
+		String name
+		)
 
-Publisher(id String PK, String name, broker_id String [Foreign key])
+publisher(id String PK,
+			String name,
+			broker_id String  FK -> broker(id)
+		)
 
-Subscriber(id String PK, String name, broker_id String [Foreign key])
+subscriber(	id String PK,
+			String name,
+			broker_id String Fk -> broker(id)
+		)
 
-Message(id String PK, String payload, offset long, String topic_id [Foreign Key])
+message( id String PK,
+		String payload,
+		offset long,
+		String topic_id FK -> topic(id)
+	)
 
-Topic_Publisher_lookUp(topic_id String, publisher_id String, [Primary key(topic_id, publisher_id)])
+topic_publisher(	topic_id String FK -> topic(id),
+					publisher_id String FK -> publisher(id),
+					Primary key{ topic_id, publisher_id }
+				)
 
-Topic_Subscription(topic_id String, subscriber_id String, lastCommitedOffset long, [Primary Key(topic_id, subscriber_id)])
-
+topic_subscription(	topic_id String FK -> topic(id),
+					subscriber_id String FK -> subscriber(id),
+					last_commited_offset long,
+					Primary Key{ topic_id, subscriber_id }
+				)
