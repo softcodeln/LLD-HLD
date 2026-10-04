@@ -7,7 +7,7 @@ LLD Case Study = Publisher-Subscriber System
 5. Schema Desgin + Attributes (PK + FK + attrib) + Cardinalities
 
 Step-1: Understanding Problem Statement
-Publisher and Subscriber System => A subscriber will subsribe a service and publisher will publisher will publich message to service subscribed.
+Publisher and Subscriber System => Design a message broker where publishers publish messages to topics and subscribers subscribe to topics. Every subscriber of a topic receives every message in order, and tracks its own read position (offset).
 
 Step-2: Requirement Gathering
 1. Publisher can sent message
