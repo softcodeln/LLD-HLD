@@ -72,6 +72,8 @@ Subscriber - Broker = M:1
 Message - Topic = M:1
 Topic - Subscriber = M:M
 Topic - Publisher = M:M
+Subscription - Topic = M:1
+Subscription - Subscriber = M:1
 
 ****Design-Patterns****
 Observer Design Pattern and Facade Desing Pattern
