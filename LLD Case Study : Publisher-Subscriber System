@@ -73,10 +73,13 @@ Message - Topic = M:1
 Topic - Subscriber = M:M
 Topic - Publisher = M:M
 
-
 ****Design-Patterns****
-Observer Design Pattern
-Facade Desing Pattern
+Observer Design Pattern and Facade Desing Pattern
+Broker is the Facade and Observer subject
+Subscriber is the Observer
+
+
+
 
 
 Step-5: Schema Design + Attributes (PK + FK + attrib) + Cardinalities
