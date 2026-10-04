@@ -10,10 +10,10 @@ Step-1: Understanding Problem Statement
 Publisher and Subscriber System => Design a message broker where publishers publish messages to topics and subscribers subscribe to topics. Every subscriber of a topic receives every message in order, and tracks its own read position (offset).
 
 Step-2: Requirement Gathering
-1. Publisher can sent message
+1. Publisher can send message
 2. Subscriber can read message.
 3. Subscriber and Publisher have indirectly many-to-many relation.
-4. Publisher and Subscriber will be loosly coupled.
+4. Publisher and Subscriber will be loosely coupled.
 5. Subscriber can subscribe/unsubscribe to a Topic through the Broker; publishers stay unaware of subscribers.
 6. Message read by Subscriber is near real-time.
 
@@ -113,7 +113,7 @@ publisher(id String PK,
 
 subscriber(	id String PK,
 			String name,
-			broker_id String Fk -> broker(id)
+			broker_id String FK -> broker(id)
 		)
 
 message( id String PK,
@@ -129,6 +129,6 @@ topic_publisher(	topic_id String FK -> topic(id),
 
 topic_subscription(	topic_id String FK -> topic(id),
 					subscriber_id String FK -> subscriber(id),
-					last_commited_offset long,
+					last_committed_offset long,
 					Primary Key{ topic_id, subscriber_id }
 				)
