@@ -1,0 +1,109 @@
+LLD Case Study = Publisher-Subscriber System
+
+1. Understanding Problem Statement
+2. Requirement Gathering
+3. Clarify requirements
+4. Class Diagram + Relationship b/w Entities + Design Patterns
+5. Schema Desgin + Attributes (PK + FK + attrib) + Cardinalities
+
+Step-1: Understanding Problem Statement
+Publisher and Subscriber System => A subscriber will subsribe a service and publisher will publisher will publich message to service subscribed.
+
+Step-2: Requirement Gathering
+1. Publisher can sent message
+2. Subscriber can read message.
+3. Subscriber and Publisher have indirectly many-to-many relation.
+4. Publisher and Subscriber will be loosly coupled.
+5. Subscriber can register and deregister themself to Publisher.
+6. Message read by Subscriber is near real-time.
+
+Step-3: Clarify Requirements
+Discuss requirements with Interviewer
+
+Step-4: Class Diagram + Relationship b/w Entities + Design Patterns
+
+****Class-Diagram****
+
+class Topic {
+	-String id
+	-String name
+	-List<Message> messages
+	-long latestOffset = -1
+}
+
+class Broker {
+	-String id
+	-String name
+	-Map<String, Map<String, Subscription>> subscriptions; // topicId -> subscriberId -> Subscription
+	-Map<String, Set<Publisher>> topicPublisher //key = topic_id, Topic Wise Publisher
+	-Map<String, Topic> topics
+}
+
+class Publisher {
+	-String id
+	-String name
+	-Broker broker
+}
+
+class Subscriber {
+	-String id
+	-String name
+	-Broker broker
+}
+
+class Subscription {
+	-Topic topic
+	-Subscriber subscriber
+	-long lastCommittedOffset = -1
+}
+
+class Message {
+	-String id
+	-String payload
+	-Topic topic
+	-long offset
+}
+
+****Relationship-b/w-Entities****
+Topic - Broker = M:1
+Subscription - Broker = M:1
+Publisher - Broker = M:1
+Subscriber - Broker = M:1
+Message - Topic = M:1
+Topic - Subscriber = M:M
+Topic - Publisher = M:M
+
+
+****Design-Patterns****
+Observer Design Pattern
+Facade Desing Pattern
+
+
+Step-5: Schema Design + Attributes (PK + FK + attrib) + Cardinalities
+
+****Cardinalities****
+Topic - Broker = M:1
+Publisher - Broker = M:1
+Subscriber - Broker = M:1
+Message - Topic = M:1
+Topic - Subscriber = M:M
+Topic - Publisher = M:M
+Subscription - Subscriber = M:1
+Subscription - Topic = M:1
+
+****Schema Desgin + Attributes (PK + FK + attrib) ****
+
+Topic(id String [Primary key], String name, latestOffset long, broker_id String [Foreign Key])
+
+Broker(id String PK, String name)
+
+Publisher(id String PK, String name, broker_id String [Foreign key])
+
+Subscriber(id String PK, String name, broker_id String [Foreign key])
+
+Message(id String PK, String payload, offset long, String topic_id [Foreign Key])
+
+Topic_Publisher_lookUp(topic_id String, publisher_id String, [Primary key(topic_id, publisher_id)])
+
+Topic_Subscription(topic_id String, subscriber_id String, lastCommitedOffset long, [Primary Key(topic_id, subscriber_id)])
+
