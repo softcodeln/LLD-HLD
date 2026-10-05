@@ -1,0 +1,21 @@
+****LLD Important Point****:
+In Clarify Requirements step you ask how the system should behave in edge cases.You don't solve them there.
+What you do with an edge case {Ask about it, or state your assumption, and write down the expected behaviour}
+Concurrency expectations: what must never happen, e.g. two people booking the same seat
+
+****How to make Design Pattern Visible in LLD Solution****:
+
+1) Creational Design Patterns
+
+2) Structural Design Patterns
+
+A.Facade Design Pattern
+Keep the logic in the subsystems; the facade only calls them in order
+Make the facade the only door for Client to enter and dont't let Controllers call subsystems directly and the facade.
+
+3) Behavioural Design Patterns
+
+B. Observer Design Pattern
+1.Name the subject, the interface, the concrete observers, and the notify line
+2.Show 2–3 Observers, to prove they're swappable
+3.Pass an event object with ids, type and timestamp like onMessage(event, id, current_Time()), so the observer can act on it.
