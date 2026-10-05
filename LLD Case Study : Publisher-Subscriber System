@@ -56,7 +56,10 @@ class Publisher {
 	send(topicId, payload)
 }
 
-class Subscriber {
+interface MessageListenser {
+	+onMessage(String mesaage);
+}
+class Subscriber implements MessageListenser{
 	attributes:
 	-String id
 	-String name
@@ -66,6 +69,7 @@ class Subscriber {
 	read(topicId)
 	subscribe(topicId)
 	unsubscribe(topicId)
+	onMessage(String mesaage) // Broker calls this message.
 }
 
 class Subscription {
