@@ -1,21 +1,81 @@
-****LLD Important Point****:
-In Clarify Requirements step you ask how the system should behave in edge cases.You don't solve them there.
-What you do with an edge case {Ask about it, or state your assumption, and write down the expected behaviour}
-Concurrency expectations: what must never happen, e.g. two people booking the same seat
+IMPORTANT POINTS FOR LLD PROBLEM SOLVING
+=========================================
 
-****How to make Design Pattern Visible in LLD Solution****:
+1. Clarify Requirements
+-----------------------
 
-1) Creational Design Patterns
+During the requirements-clarification step, identify how the system should
+behave in edge cases. Do not solve those edge cases at this stage.
 
-2) Structural Design Patterns
+For each edge case, do one of the following:
 
-A.Facade Design Pattern
-Keep the logic in the subsystems; the facade only calls them in order
-Make the facade the only door for Client to enter and dont't let Controllers call subsystems directly and the facade.
+- Ask the interviewer or stakeholder for clarification.
+- State a reasonable assumption.
+- Document the expected system behavior.
 
-3) Behavioural Design Patterns
+Example:
+- Edge case: Two people try to book the same seat at the same time.
+- Concurrency expectation: The system must never allow both requests to
+  successfully book the same seat.
 
-B. Observer Design Pattern
-1.Name the subject, the interface, the concrete observers, and the notify line
-2.Show 2–3 Observers, to prove they're swappable
-3.Pass an event object with ids, type and timestamp like onMessage(event, id, current_Time()), so the observer can act on it.
+Always document important concurrency expectations, including what must never
+happen when multiple requests are processed simultaneously.
+
+
+HOW TO MAKE DESIGN PATTERNS VISIBLE IN AN LLD SOLUTION
+=======================================================
+
+When using a design pattern, make its intent and structure easy to identify.
+Explicitly show the participants, their responsibilities, and how they
+collaborate. Avoid using a pattern only implicitly through class names or
+method calls.
+
+
+1. Creational Design Patterns
+-----------------------------
+
+Add important points here as they are documented.
+
+
+2. Structural Design Patterns
+-----------------------------
+
+A. Facade Design Pattern
+
+- Keep the business logic inside the appropriate subsystem classes.
+- The facade should coordinate the subsystem calls in the required order.
+- Make the facade the single entry point for the client.
+- Do not allow controllers or clients to call subsystem classes directly.
+- Clearly show the client, facade, and subsystems in the class diagram or
+  interaction flow.
+
+
+3. Behavioral Design Patterns
+-----------------------------
+
+A. Observer Design Pattern
+
+To make the Observer pattern visible:
+
+1. Clearly name and identify the following:
+   - Subject
+   - Observer interface
+   - Concrete observers
+   - Notification or publish operation
+
+2. Show two or three concrete observers to demonstrate that observers are
+   interchangeable.
+
+3. Pass an event object to observers instead of passing unrelated primitive
+   arguments. The event object should contain the information observers need,
+   such as:
+   - Entity or event IDs
+   - Event type
+   - Timestamp
+
+Example:
+
+    onMessage(event)
+
+The event object allows each observer to decide how to react to the event
+without tightly coupling the subject to a specific observer implementation.
