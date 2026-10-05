@@ -32,23 +32,40 @@ class Topic {
 }
 
 class Broker {
+	attributes:
 	-String id
 	-String name
 	-Map<String, Map<String, Subscription>> subscriptions; // topicId -> subscriberId -> Subscription
 	-Map<String, Set<Publisher>> topicPublisher //key = topic_id, Topic Wise Publisher
 	-Map<String, Topic> topics
+
+	methods:
+	addSubscriber(topicId, subscriber)
+	removeSubscriber(topicId, subscriber)
+	read(topicId, subscriber)
+	write(topicId, payload)
 }
 
 class Publisher {
+	attributes:
 	-String id
 	-String name
 	-Broker broker
+
+	methods:
+	send(topicId, payload)
 }
 
 class Subscriber {
+	attributes:
 	-String id
 	-String name
 	-Broker broker
+
+	methods:
+	read(topicId)
+	subscribe(topicId)
+	unsubscribe(topicId)
 }
 
 class Subscription {
