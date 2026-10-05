@@ -43,7 +43,7 @@ class Broker {
 	addSubscriber(topicId, subscriber)
 	removeSubscriber(topicId, subscriber)
 	read(topicId, subscriber)
-	write(topicId, payload)
+	write(topicId, payload, publisher)
 }
 
 class Publisher {
