@@ -17,8 +17,9 @@ Step-2: Requirement Gathering
 5. Subscriber can subscribe/unsubscribe to a Topic through the Broker; publishers stay unaware of subscribers.
 6. Message read by Subscriber is near real-time.
 
-Step-3: Clarify Requirements
-Discuss requirements with Interviewer
+Step-3: Clarify Requirements // In Clarify Requirements Step, you ask how the system should behave in edge cases.You don't solve them there. {State your assumption, and write down the expected behaviour}
+1. At-least-once delivery
+2. Order within topic guranted & not across Publisher
 
 Step-4: Class Diagram + Relationship b/w Entities + Design Patterns
 
