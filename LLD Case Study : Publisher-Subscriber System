@@ -1,4 +1,4 @@
-LLD Case Study = Publisher-Subscriber System
+LLD Case Study : Publisher-Subscriber System
 
 1. Understanding Problem Statement
 2. Requirement Gathering
@@ -16,6 +16,7 @@ Step-2: Requirement Gathering
 4. Publisher and Subscriber will be loosely coupled.
 5. Subscriber can subscribe/unsubscribe to a Topic through the Broker; publishers stay unaware of subscribers.
 6. Message read by Subscriber is near real-time.
+7. Publisher can register and unregister themself to topic present on Broker.
 
 Step-3: Clarify Requirements // In Clarify Requirements Step, you ask how the system should behave in edge cases.You don't solve them there. {State your assumption, and write down the expected behaviour}
 1. At-least-once delivery
@@ -102,43 +103,41 @@ Observer Design Pattern and Facade Desing Pattern
 Broker is the Facade and Observer subject
 Subscriber is the Observer
 
-
-
 Step-5: Schema Design + Attributes (PK + FK + attrib) + Cardinalities
 
 ****Cardinalities****
-topic - broker = M:1
-publisher - broker = M:1
-subscriber - broker = M:1
-message - topic = M:1
-topic - subscriber = M:M
-topic - publisher = M:M
-topic_subscription - subscriber = M:1
-topic_subscription - topic = M:1
+topics - brokers = M:1
+publishers - brokers = M:1
+subscribers - brokers = M:1
+messages - topics = M:1
+topics - subscribers = M:M
+topics - publishers = M:M
+topic_subscription - subscribers = M:1
+topic_subscription - topics = M:1
 
 ****Schema Desgin + Attributes (PK + FK + attrib) ****
 
-topic(	id String PK,
+topics(	id String PK,
 		String name,
 		latestOffset long,
 		broker_id String FK -> broker(id)
 	)
 
-broker(	id String PK,
+brokers(	id String PK,
 		String name
 		)
 
-publisher(id String PK,
+publishers(id String PK,
 			String name,
 			broker_id String  FK -> broker(id)
 		)
 
-subscriber(	id String PK,
+subscribers(	id String PK,
 			String name,
 			broker_id String FK -> broker(id)
 		)
 
-message( id String PK,
+messages( id String PK,
 		String payload,
 		offset long,
 		String topic_id FK -> topic(id)
@@ -154,3 +153,52 @@ topic_subscription(	topic_id String FK -> topic(id),
 					last_committed_offset long,
 					Primary Key{ topic_id, subscriber_id }
 				)
+
+Step-6: API Design
+
+1. create topic
+2. create Publisher
+3. remove Publihser
+4. register Publisher
+5. unregister Publisher
+6. create Subscriber
+7. remove Subscriber
+8. subscribe publisher
+9. unsubscribe publisher
+10.Publisher send message
+11.Subscriber read message
+
+1.create topic
+POST /v1/topics
+
+2.create publisher
+POST /v1/publishers
+
+3. remove publisher
+DELETE /v1/publishers/{publisherId}
+
+4. regsiter publishers
+POST /v1/topics/{topicId}/publishers
+
+5. unregister publisher
+DELETE /v1/topics/{topicId}/publishers/{publisherId}
+
+6. create Subscriber
+POST /v1/subscribers
+
+7. remove Subscriber
+DELETE /v1/subscribers/{subscriberId}
+
+8. subscribe to a topic
+POST /v1/topics/{topicId}/subscriptions
+
+9. unsubscribe to a topic
+DELETE /v1/topics/{topicId}/subscriptions/{subscriberId}
+
+10. publisher send message
+POST /v1/topics/{topicId}/messages
+
+11. subscriber read message
+GET /v1/topics/{topicId}/subscriptions/{subscriberId}/messages
+
+
